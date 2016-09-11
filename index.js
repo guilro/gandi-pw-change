@@ -48,7 +48,10 @@ app.get('/cpw', (req, res, next) => {
       }, (err, ok) => {
         smtpConn.quit();
         if (err) {
-          err = new Error('Old password is probably not correct.');
+          err = new Error(
+            'Old password is probably not correct. ' +
+            'Contact your administrator of you cannot remember it.'
+          );
           err.status = 403;
 
           return cb(err);
@@ -60,7 +63,7 @@ app.get('/cpw', (req, res, next) => {
     function changePassword(result, cb) {
       var [id, domain] = req.query.email.split('@');
 
-      console.log(`Changing password for ${id}@${domain}`);
+      console.log(`${id}@${domain} : Trying to change password.`);
 
       api.methodCall('domain.mailbox.update', [
         API_KEY,
@@ -68,30 +71,43 @@ app.get('/cpw', (req, res, next) => {
         id,
         {password: req.query.new_password}
       ], (err, value) => {
-        if (err) return cb(err);
+        if (err) {
+          if (err.message.indexOf('it is based on a dictionary word') !== -1) {
+            err = new Error(
+              'New password is based on a dictionary ' +
+              'word.'
+            );
+            err.status = 400;
+
+            return cb(err);
+          }
+
+          if (err.message.indexOf('string does not match') !== -1) {
+            err = new Error(
+              'Password must contains at least 8 ' +
+              'characters (including 2 digits and 2 special characters), ' +
+              'or be at least 16 characters long.'
+            );
+            err.status = 400;
+
+            return cb(err);
+          }
+        }
 
         return cb(null, true);
       });
     }
   ], (err, results) => {
     if (err) {
-      if (err.message.indexOf('it is based on a dictionary word') !== -1) {
-        return res.status(400).send(
-          'New password is based on a dictionary ' +
-          'word.'
-        );
-      }
-
-      if (err.message.indexOf('string does not match \'^.{8,200}$\'') !== -1) {
-        return res.status(400).send(
-          'Password must contains at least 8 ' +
-          'characters (including 2 digits and 2 special characters), or be ' +
-          'at least 16 characters long.'
-        );
+      if (err.status && err.status !== 500) {
+        console.log(req.query.email, ':', err.message);
+        return res.status(err.status).send(err.message);
       }
 
       return next(err);
     }
+
+    console.log(req.query.email, ': OK');
 
     return res.sendStatus(200);
   });
