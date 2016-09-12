@@ -50,7 +50,7 @@ app.get('/cpw', (req, res, next) => {
         if (err) {
           err = new Error(
             'Old password is probably not correct. ' +
-            'Contact your administrator of you cannot remember it.'
+            'Contact your administrator if you cannot remember it.'
           );
           err.status = 403;
 
