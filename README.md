@@ -2,9 +2,9 @@
 Utility to allow users to change themselves their password on Gandi Mail via web interface. You can see it in production at [pw.webmail.redado.com](https://pw.webmail.redado.com).
 
 ## How does it work ?
-Mailbox users cannot change their password on Gandi Mail, they have to ask the administrator.
+Users cannot change their password on Gandi Mail, they have to ask their administrator.
 
-The app checks users mailbox old password against Gandi's SMTP server. If the old password is correct, password is changed using Gandi API.
+The app checks users old password against Gandi's SMTP server. If the old password is correct, password is changed using Gandi API.
 
 ## Install
 
