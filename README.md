@@ -1,5 +1,5 @@
 # gandi-pw-change
-Utility to allow users to change themselves their password on Gandi Mail. You can see it in production at [pw.webmail.redado.com](pw.webmail.redado.com);
+Utility to allow users to change themselves their password on Gandi Mail. You can see it in production at [pw.webmail.redado.com](pw.webmail.redado.com).
 
 ## Install
 
