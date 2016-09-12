@@ -19,6 +19,8 @@ const api = xmlrpc.createSecureClient({
 const app = express();
 const port = process.env.port || 8000;
 
+app.get('/', express.static('app'));
+
 app.get('/cpw', (req, res, next) => {
   if (!req.query.email || !req.query.old_password || !req.query.new_password) {
     res.sendStatus(400);

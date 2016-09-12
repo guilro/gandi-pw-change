@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-S7YMK1xjUjSpEnF4P8hPUcgjXYLZKK3fQW1j5ObLSl787II9p8RO9XUGehRmKsxd" crossorigin="anonymous">
+    <style>
+      body {
+        padding-top: 50px;
+      }
+    </style>
+  </head>
+<body>
+  <div class="container">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+      <h1 class="page-header">Change my mailbox password</h1>
+      <div id="message"></div>
+      <form id="form" class="form">
+        <div class="form-group">
+          <input class="form-control input-lg" id="email" type="text" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <input class="form-control input-lg" id="old_password" type="password" placeholder="Old password">
+        </div>
+        <div class="form-group">
+          <input class="form-control input-lg" id="new_password" type="password" placeholder="New password">
+          <input class="form-control input-lg" id="new_password_check" type="password" placeholder="Repeat new password">
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Change password</button>
+      </form>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+  <script>
+    $(function() {
+      function errMessage(text) {
+        if (typeof text == 'undefined') {
+          $('#message').html(' ');
+
+          return;
+        }
+
+        $('#message').html('<div class="alert alert-danger">' + text + '</div>');
+      }
+
+      $('#form').submit(function(event) {
+        event.preventDefault();
+
+        if ($('#new_password').val() !== $('#new_password_check').val()) {
+          return errMessage('Password do not match.')
+        }
+
+        errMessage();
+        $('#form').hide();
+
+        $.get('/cpw', {
+          email: $('#email').val(),
+          old_password: $('#old_password').val(),
+          new_password: $('#new_password').val()
+        }).always(function(data) {
+          if (data === 'OK') {
+            return $('#message').html('<div class="alert alert-success">Password changed. You can close this window.</div>');
+          }
+
+          $('#form').show();
+          errMessage(data.responseText);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
