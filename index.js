@@ -51,7 +51,8 @@ app.get('/cpw', (req, res, next) => {
         smtpConn.quit();
         if (err) {
           err = new Error(
-            'Old password is probably not correct. ' +
+            'Old password is probably not correct ' +
+            'or you mistyped the email address.' +
             'Contact your administrator if you cannot remember it.'
           );
           err.status = 403;
