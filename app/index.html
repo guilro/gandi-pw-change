@@ -70,7 +70,7 @@
         $('#form').css("visibility", "hidden");
 
         $.get('/cpw', {
-          email: $('#email').val(),
+          email: $('#email').val().trim(),
           old_password: $('#old_password').val(),
           new_password: $('#new_password').val()
         }).always(function(data) {
